@@ -1,82 +1,67 @@
 #include <stdio.h>
 #include <stdlib.h>
-/**
- * @param int valores, tamanho
- * @param int selectionSort(), bubbleSort()
- */
-int selectionSort(int valores[], int tamanho);
-int bubbleSort(int valores[], int tamanho);
-/**
- *  ==== FUNCAO MAIN ====
- */
+
+// Protótipos com tipagem correta (void)
+void selectionSort(int valores[], int tamanho);
+void bubbleSort(int valores[], int tamanho);
+void imprimirArray(int valores[], int tamanho);
+
 int main()
 {
-    /**
-     * @param int *array=NULL
-     * @def array is a pointer to store every argument from user.
-     */
     int *array = NULL;
     int valor, tamanho = 0;
     char prox_char;
 
-    printf("Digite os valores separados por SPACE e, assim que feito, pressione ENTER.");
+    printf("Digite os valores (ex: 10 5 8 20) e pressione ENTER: ");
+
     do
     {
+        // Tenta ler o número
         if (scanf("%d", &valor) != 1)
-        {
             break;
-        }
-        tamanho++;
 
+        tamanho++;
         int *temp = realloc(array, tamanho * sizeof(int));
 
         if (temp == NULL)
         {
-            printf("Erro na Alocacao de Memoria");
+            printf("Erro critico: Falha na alocacao de memoria.\n");
             free(array);
             return 1;
         }
 
         array = temp;
         array[tamanho - 1] = valor;
+
+        // Captura o espaço ou o Enter
         prox_char = getchar();
 
     } while (prox_char != '\n' && prox_char != EOF);
 
-    printf("\n--- Usando Selection Sort ---\n");
-    selectionSort(array, tamanho);
-    printf("Array ordenado: ");
-    for (int i = 0; i < tamanho; i++)
+    if (tamanho > 0)
     {
-        printf("%d ", array[i]);
-    }
-    printf("\n");
+        printf("\n--- Array Original ---\n");
+        imprimirArray(array, tamanho);
 
-    printf("\n--- Usando Bubble Sort ---\n");
-    bubbleSort(array, tamanho);
-    printf("Array ordenado: ");
-    for (int i = 0; i < tamanho; i++)
-    {
-        printf("%d ", array[i]);
+        // Escolha um para testar ou clone o array para testar ambos
+        printf("\n--- Ordenando com Selection Sort ---\n");
+        selectionSort(array, tamanho);
+        imprimirArray(array, tamanho);
     }
-    printf("\n");
 
     free(array);
     return 0;
 }
 
-int selectionSort(int valores[], int tamanho)
+void selectionSort(int valores[], int tamanho)
 {
     for (int i = 0; i < tamanho - 1; i++)
     {
         int min = i;
-
         for (int j = i + 1; j < tamanho; j++)
         {
-            if (valores[min] > valores[j])
-            {
+            if (valores[j] < valores[min])
                 min = j;
-            }
         }
         int temp = valores[i];
         valores[i] = valores[min];
@@ -84,7 +69,7 @@ int selectionSort(int valores[], int tamanho)
     }
 }
 
-int bubbleSort(int valores[], int tamanho)
+void bubbleSort(int valores[], int tamanho)
 {
     for (int i = 0; i < tamanho - 1; i++)
     {
@@ -98,4 +83,12 @@ int bubbleSort(int valores[], int tamanho)
             }
         }
     }
+}
+
+void imprimirArray(int valores[], int tamanho)
+{
+    printf("Array: [ ");
+    for (int i = 0; i < tamanho; i++)
+        printf("%d ", valores[i]);
+    printf("]\n");
 }
